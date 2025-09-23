@@ -18,10 +18,15 @@ const upload = multer({
     }
 });
 
-// Fields for S3 upload
+// Fields for S3 upload - accept common field name variations
 const uploadApplicationFiles = upload.fields([
     { name: 'linkedin_screenshot', maxCount: 1 },
-    { name: 'payment_screenshot', maxCount: 1 }
+    { name: 'payment_screenshot', maxCount: 1 },
+    { name: 'linkedinScreenshot', maxCount: 1 },
+    { name: 'paymentScreenshot', maxCount: 1 },
+    { name: 'linkedin', maxCount: 1 },
+    { name: 'payment', maxCount: 1 },
+    { name: 'paymentProof', maxCount: 1 }
 ]);
 
 // Error handler

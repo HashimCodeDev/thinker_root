@@ -13,11 +13,33 @@ const createApplication = async (req, res) => {
         }
 
         const files = req.files || {};
-        const linkedinUrl = files.linkedin_screenshot ? await uploadToS3(files.linkedin_screenshot[0]) : null;
-        const paymentUrl = files.payment_screenshot ? await uploadToS3(files.payment_screenshot[0]) : null;
+        
+        // Check multiple possible field names for LinkedIn screenshot
+        const linkedinFile = files.linkedin_screenshot?.[0] || 
+                           files.linkedinScreenshot?.[0] || 
+                           files.linkedin?.[0];
+        
+        // Check multiple possible field names for payment screenshot
+        const paymentFile = files.payment_screenshot?.[0] || 
+                          files.paymentScreenshot?.[0] || 
+                          files.payment?.[0] ||
+                          files.paymentProof?.[0];
+        
+        const linkedinUrl = linkedinFile ? await uploadToS3(linkedinFile) : null;
+        const paymentUrl = paymentFile ? await uploadToS3(paymentFile) : null;
 
         const app = await Application.create({
-            ...req.body,
+            first_name: req.body.firstName,
+            last_name: req.body.lastName,
+            email: req.body.email,
+            phone: req.body.phone,
+            organization: req.body.organization,
+            role: req.body.role,
+            preferred_theme: req.body.theme,
+            experience_level: req.body.experience,
+            technical_skills: req.body.skills,
+            motivation: req.body.motivation,
+            linkedin_post_link: req.body.linkedinLink,
             linkedin_post_screenshot_url: linkedinUrl,
             payment_screenshot_url: paymentUrl,
         });
