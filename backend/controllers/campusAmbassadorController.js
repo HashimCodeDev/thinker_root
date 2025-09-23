@@ -3,7 +3,22 @@ import CampusAmbassador from "../model/CampusAmbassador.js";
 // 📌 Create new Campus Ambassador application (Public POST)
 export const createCampusAmbassador = async (req, res) => {
   try {
-    const ambassador = await CampusAmbassador.create(req.body);
+    const { name, college, linkedin, phone, email } = req.body;
+    
+    if (!name || !college || !linkedin || !phone || !email) {
+      return res.status(400).json({
+        success: false,
+        error: "All fields are required: name, college, linkedin, phone, email"
+      });
+    }
+
+    const ambassador = await CampusAmbassador.create({
+      name,
+      college_name: college,
+      linkedin_url: linkedin,
+      phone,
+      email
+    });
     res.status(201).json({
       success: true,
       message: "Application submitted successfully",
