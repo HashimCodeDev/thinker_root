@@ -6,6 +6,7 @@ import cors from "cors";
 import { sequelize } from "./config/db.js";
 import applicationRouter from "./routes/applicationRouter.js";
 import campusAmbassadorRoutes from "./routes/campusAmbassadorRoutes.js";
+import { getApplicationCount } from "./controllers/user.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,6 +29,7 @@ app.use(express.json());
 /* ✅ Mount routers */
 app.use("/api/applications", applicationRouter);
 app.use("/api/campus-ambassadors", campusAmbassadorRoutes);
+app.get("/api/registration-count", getApplicationCount);
 
 /* ✅ Database connection */
 (async () => {
@@ -47,5 +49,5 @@ app.get("/", (req, res) => {
 
 /* ✅ Start server */
 app.listen(PORT, () => {
-	console.log(`✅ Server running on http://localhost:${PORT}`);
+	console.log(`✅ Server running on ${PORT}`);
 });
