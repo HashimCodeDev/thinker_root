@@ -12,34 +12,40 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+/* ✅ Apply CORS before routes */
 app.use(
 	cors({
-		origin: process.env.CORS_ORIGIN || ["http://localhost:3000"],
-		methods: ["GET", "POST", "PUT", "DELETE"],
-		credentials: true,
+		origin: "*", // Allow all origins
+		methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+		credentials: true, // set to false if not using cookies
 	})
 );
+
+/* ✅ Parse JSON bodies before routers */
 app.use(express.json());
+
+/* ✅ Mount routers */
 app.use("/api/applications", applicationRouter);
 app.use("/api/campus-ambassadors", campusAmbassadorRoutes);
 
+/* ✅ Database connection */
 (async () => {
 	try {
 		await sequelize.authenticate();
 		console.log("✅ DB Connected");
-		await sequelize.sync(); // creates table if not exists
+		await sequelize.sync(); // creates tables if not exists
 	} catch (err) {
 		console.error("❌ DB Connection Error:", err);
 	}
 })();
 
-// Example route
+/* ✅ Health check route */
 app.get("/", (req, res) => {
 	res.send("Hello, World! 🚀 Server is running.");
 });
 
-// Start server
+/* ✅ Start server */
 app.listen(PORT, () => {
 	console.log(`✅ Server running on http://localhost:${PORT}`);
 });
